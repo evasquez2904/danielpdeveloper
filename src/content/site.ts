@@ -206,14 +206,14 @@ export const site = {
   access: {
     kicker: "Acceso a los repos",
     title: "Dime quién eres",
-    body: "Lectura, el mismo día. Necesito tu usuario de GitHub para invitarte como colaborador.",
+    body: "Una solicitud, los tres repos. Necesito tu usuario de GitHub para invitarte como colaborador — lectura, el mismo día.",
     close: "Cerrar formulario",
+    includedLabel: "Te doy acceso a",
     fields: {
       name: { label: "Nombre y apellido", placeholder: "Ana Ruiz" },
       email: { label: "Correo de empresa", placeholder: "ana@empresa.com" },
       github: { label: "Usuario de GitHub", placeholder: "anaruiz" },
       company: { label: "Empresa y rol", placeholder: "Acme — Tech lead" },
-      repos: { label: "¿Qué repos quieres ver?" },
       message: {
         label: "Mensaje — opcional",
         placeholder: "Qué puesto es, o qué te gustaría que te enseñe en la llamada.",
@@ -228,7 +228,6 @@ export const site = {
       email: "Ese correo no parece válido.",
       github: "Hace falta tu usuario de GitHub para poder invitarte.",
       company: "Dime de dónde vienes.",
-      repos: "Marca al menos un repo.",
       failed: "No se pudo enviar. Escríbeme directo mientras lo reviso.",
     },
   },
@@ -238,8 +237,8 @@ export const site = {
     kicker: "Recibido",
     titleLines: ["Solicitud", "enviada"],
     // {email} se reemplaza por el correo que escribió el solicitante.
-    body: "Te llega la invitación de GitHub a {email} hoy mismo. Si no aparece, mira en spam o escríbeme directo.",
-    requestedLabel: "Pediste",
+    body: "Te llegan las invitaciones de GitHub a {email} hoy mismo. Si no aparecen, mira en spam o escríbeme directo.",
+    requestedLabel: "Acceso a",
     back: "Volver",
   },
 } satisfies Site;
@@ -299,21 +298,18 @@ interface Site {
     title: string;
     body: string;
     close: string;
+    includedLabel: string;
     fields: {
       name: Field;
       email: Field;
       github: Field;
       company: Field;
-      repos: Labelled;
       message: Field;
     };
     submit: string;
     submitting: string;
     legal: string;
-    errors: Record<
-      "name" | "email" | "github" | "company" | "repos" | "failed",
-      string
-    >;
+    errors: Record<"name" | "email" | "github" | "company" | "failed", string>;
   };
   sent: Record<"kicker" | "body" | "requestedLabel" | "back", string> & {
     titleLines: readonly string[];

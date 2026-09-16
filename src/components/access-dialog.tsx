@@ -115,29 +115,20 @@ function Form({ action, pending, state, onClose }: FormProps) {
             />
           </div>
 
-          <fieldset className="mt-5 border-0 p-0">
-            <legend className="label mb-3 text-[10px] text-fg-3">
-              {access.fields.repos.label}
-            </legend>
-            <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="mt-5">
+            <p className="label mb-3 text-[10px] text-fg-3">{access.includedLabel}</p>
+            <ul className="flex flex-col gap-2 sm:flex-row">
               {projects.items.map((project) => (
-                <label
+                <li
                   key={project.slug}
-                  className="label flex h-12 flex-1 cursor-pointer items-center gap-2.5 border border-edge px-3.5 text-[11px] text-fg-2 transition-colors duration-150 has-checked:border-accent has-checked:bg-accent-soft has-checked:text-fg"
+                  className="label flex h-12 flex-1 items-center gap-2.5 border border-edge bg-accent-soft px-3.5 text-[11px] text-fg"
                 >
-                  <input
-                    type="checkbox"
-                    name="repos"
-                    value={project.slug}
-                    defaultChecked={values ? values.repos.includes(project.slug) : true}
-                    className="size-3.5 accent-accent"
-                  />
+                  <Check className="size-3.5 shrink-0 text-accent" />
                   {project.name}
-                </label>
+                </li>
               ))}
-            </div>
-            {errors.repos && <Error message={errors.repos} />}
-          </fieldset>
+            </ul>
+          </div>
 
           <div className="mt-5">
             <label htmlFor="message" className="label mb-2.5 block text-[10px] text-fg-3">
@@ -240,10 +231,7 @@ interface SentProps {
 
 function Sent({ result, onClose }: SentProps) {
   const { sent } = site;
-  const names = site.projects.items
-    .filter((project) => result.repos.includes(project.slug))
-    .map((project) => project.name)
-    .join(" / ");
+  const names = site.projects.items.map((project) => project.name).join(" / ");
 
   return (
     <div className="flex flex-col bg-accent p-6 text-bg md:p-11">

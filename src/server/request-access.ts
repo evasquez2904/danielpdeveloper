@@ -21,7 +21,7 @@ export async function requestAccess(
 ): Promise<AccessResult> {
   // Un bot rellena el campo trampa. Le contestamos que sí y no enviamos nada.
   if (formData.get(HONEYPOT)) {
-    return { ok: true, email: "", repos: [] };
+    return { ok: true, email: "" };
   }
 
   const values = readValues(formData);
@@ -45,7 +45,7 @@ export async function requestAccess(
   const delivered = await deliver(request);
 
   return delivered
-    ? { ok: true, email: request.email, repos: request.repos }
+    ? { ok: true, email: request.email }
     : { ok: false, errors: { form: site.access.errors.failed }, values };
 }
 
@@ -76,27 +76,23 @@ async function deliver(request: AccessRequest): Promise<boolean> {
   return true;
 }
 
+// Una solicitud son los tres repos, así que cada comando es una línea sola que
+// los recorre — pegar tres veces era la parte manual que sobraba.
 function compose(request: AccessRequest): string {
-  const wanted = site.projects.items.filter((project) =>
-    request.repos.includes(project.slug),
-  );
-
-  const commands = wanted
-    .map(
-      (project) =>
-        `gh api -X PUT repos/${project.repo}/collaborators/${request.github} -f permission=pull`,
-    )
-    .join("\n");
+  const repos = site.projects.items.map((project) => project.repo).join(" ");
+  const loop = (verb: string) =>
+    `for r in ${repos}; do gh api -X ${verb} repos/$r/collaborators/${request.github}${
+      verb === "PUT" ? " -f permission=pull" : ""
+    }; done`;
 
   return [
     `${request.name} — ${request.company}`,
     `${request.email} · github.com/${request.github}`,
-    "",
-    request.message ? `"${request.message}"\n` : "",
-    `Pide: ${wanted.map((project) => project.name).join(", ")}`,
-    "",
-    "Para darle acceso de lectura:",
-    commands,
+    request.message ? `\n"${request.message}"` : "",
+    "\nDarle lectura a los tres:",
+    loop("PUT"),
+    "\nRevocar cuando cierre el proceso:",
+    loop("DELETE"),
   ]
     .filter((line) => line !== "")
     .join("\n");
