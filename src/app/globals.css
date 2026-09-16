@@ -1,1 +1,120 @@
 @import "tailwindcss";
+
+/* Vacía la paleta por defecto: `bg-red-500` deja de existir, no solo de estar
+   prohibida. Los tokens de abajo son los únicos colores que compilan. Lo que
+   esto no cubre es `bg-[#hex]`, que sigue siendo cosa del lint. */
+@theme {
+  --color-*: initial;
+}
+
+/* Los tokens son la única casa de un color. Contraste sobre --bg, verificado:
+   fg 17,7:1 · fg-2 7,8:1 · fg-3 5,5:1 · accent 5,6:1 · live 16,4:1.
+   Sobre --accent el texto es siempre --bg (5,6:1) o --accent-ink (5,1:1). */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-edge: var(--edge);
+  --color-ghost: var(--ghost);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-live: var(--live);
+
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+@theme {
+  --animate-marquee: marquee 28s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+:root {
+  color-scheme: dark;
+
+  --bg: oklch(14.52% 0.0021 286.13);
+  --raised: oklch(19.26% 0.006 285.82);
+  --line: oklch(26.76% 0.0093 294.94);
+  --edge: oklch(34.5% 0.0106 301);
+  --ghost: oklch(21.91% 0.0058 285.91);
+
+  --fg: oklch(96.16% 0.0057 84.57);
+  --fg-2: oklch(71.35% 0.011 81.79);
+  --fg-3: oklch(62.45% 0.0127 84.59);
+
+  --accent: oklch(65.26% 0.2349 32.39);
+  --accent-ink: oklch(20.7% 0.0621 37.27);
+  --accent-soft: oklch(65.26% 0.2349 32.39 / 0.12);
+  --live: oklch(92.06% 0.2218 128.1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  ::placeholder {
+    color: var(--color-fg-3);
+  }
+}
+
+/* Los dos papeles tipográficos que se repiten en toda la página. El tamaño y
+   el interlineado se ajustan en el uso; lo demás no cambia nunca. */
+
+@utility display {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-stretch: 125%;
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+@utility label {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

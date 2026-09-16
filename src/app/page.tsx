@@ -1,7 +1,5 @@
+import { SiteShell } from "@/components/site-shell";
+
 export default function Home() {
-  return (
-    <main>
-      <div>Hello world!</div>
-    </main>
-  );
+  return <SiteShell />;
 }

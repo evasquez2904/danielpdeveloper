@@ -1,34 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# danielpdeveloper
 
-## Getting Started
-
-First, run the development server:
+Landing de una página: tres sistemas en producción, sus credenciales de demo y
+un formulario para que un entrevistador pida acceso a los repos privados.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Queda en http://localhost:3000. Sin `.env` funciona todo: la solicitud de
+acceso se imprime por consola en vez de enviarse.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Cambiar un texto
 
-## Learn More
+**Todo el texto vive en [`src/content/site.ts`](src/content/site.ts).** Ningún
+componente escribe una cadena. Los marcadores pendientes están entre corchetes
+al principio del fichero — `[CIUDAD]`, `[TU CORREO]`, las credenciales de demo.
 
-To learn more about Next.js, take a look at the following resources:
+Cada proyecto es un objeto que alimenta tres vistas a la vez: la fila, la ficha
+y la casilla del formulario. Añadir un cuarto proyecto es añadir un objeto; no
+se toca ningún componente.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Color
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Los tokens de [`globals.css`](src/app/globals.css) son los únicos colores que
+compilan: `@theme { --color-*: initial }` vacía la paleta de Tailwind, así que
+`bg-red-500` no existe. Lo que esa línea no cubre es `bg-[#hex]`.
 
-## Deploy on Vercel
+Contraste verificado sobre el fondo: hueso 17,7:1 · gris-2 7,8:1 · gris-3
+5,5:1 · bermellón 5,6:1 · ácido 16,4:1. Sobre bermellón el texto es siempre
+tinta.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Movimiento
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+La tabla entera está en [`src/lib/motion.ts`](src/lib/motion.ts) y solo ahí.
+`src/components/motion-primitives.tsx` decide en un único sitio qué pasa con
+`prefers-reduced-motion`. Se animan `transform` y `opacity`; nada más.
+
+## Compuertas
+
+En este orden, porque `build` usa un comprobador de tipos indulgente:
+
+```bash
+pnpm verify
+```
+
+## Entorno
+
+`RESEND_API_KEY` y `ACCESS_REQUEST_TO`, descritas en
+[`.env.example`](.env.example).
+
+## Pendiente
+
+- Sin tests. Es el hueco conocido, no un descuido.
+- La fila 03 lleva `[URL DE PRODUCCIÓN]`: Jobs & Tools aún no responde.
+- Terremoto enseña una IP con `nip.io` en vez de un subdominio con TLS propio.
